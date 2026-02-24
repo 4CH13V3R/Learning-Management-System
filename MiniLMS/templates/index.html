@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini LMS - Learning Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(108,92,231,0.6) 0%, rgba(162,155,254,0.3) 50%, transparent 70%);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s ease-out;
+        }
+
+        /* Advanced Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(108, 92, 231, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(108, 92, 231, 0.8), 0 0 60px rgba(162, 155, 254, 0.4); }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes bounce-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes rotate-infinite {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Hero Section Enhanced */
+        .hero-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 50%, #6c5ce7 100%);
+            background-size: 200% 200%;
+            animation: gradient-shift 8s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.15);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 236, 153, 0.2);
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: rgba(162, 155, 254, 0.25);
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        /* Particle Canvas */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Animated Badge */
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 30px;
+            font-size: 15px;
+            animation: pulse-glow 2s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Animated Title */
+        .hero-title {
+            font-size: 85px;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 25px;
+            line-height: 1.05;
+            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .hero-title span {
+            background: linear-gradient(120deg, #ffeaa7, #fdcb6e, #ffeaa7);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 50px;
+            line-height: 1.7;
+        }
+
+        /* Animated Button */
+        .hero-btn {
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            color: #6c5ce7;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(108, 92, 231, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .hero-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 20px 50px rgba(108, 92, 231, 0.4);
+        }
+
+        .hero-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 120px 20px;
+            background: #0a0a0f;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(108, 92, 231, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(162, 155, 254, 0.1) 0%, transparent 40%);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 25px;
+            animation: bounce-scale 2s ease-in-out infinite;
+        }
+
+        .section-title {
+            font-size: 52px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .section-desc {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 35px;
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 45px 38px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(108, 92, 231, 0.3);
+            box-shadow: 0 30px 60px rgba(108, 92, 231, 0.2);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 28px;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(10deg) scale(1.1);
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.4);
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.55);
+            line-height: 1.75;
+            font-size: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Login Section */
+        .login-section {
+            padding: 100px 20px 120px;
+            background: linear-gradient(180deg, #0a0a0f 0%, #12121a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-section::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.2) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .login-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 50px 42px;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(20px);
+        }
+
+        .login-header h2 {
+            font-size: 34px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .tab-switcher {
+            display: flex;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 6px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-family: 'Poppins', sans-serif;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 18px 22px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 5px rgba(108, 92, 231, 0.15), 0 10px 25px rgba(108, 92, 231, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-group label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            border: none;
+            padding: 20px 38px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.4);
+        }
+
+        .login-footer a {
+            color: #a29bfe;
+        }
+
+        /* Footer */
+        .footer {
+            background: #050508;
+            padding: 80px 20px 40px;
+        }
+
+        .footer-logo {
+            background: linear-gradient(135deg, #fff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.25);
+            border-top-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(30px);
+        }
+
+        .nav-brand {
+            background: linear-gradient(135deg, #fff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+        }
+
+        /* Hide default cursor on desktop */
+        @media (min-width: 1024px) {
+            body {
+                cursor: none;
+            }
+            
+            a, button, input, select {
+                cursor: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cursor, .cursor-follower {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 48px;
+            }
+            
+            .orb {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">Mini LMS</div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#features">Features</a>
+            <a href="#login">Login</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <!-- Floating Orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        
+        <!-- Particle Canvas -->
+        <canvas id="particles"></canvas>
+        
+        <div class="hero-content">
+            <span class="hero-badge">✨ Next Gen Learning Platform</span>
+            <h1 class="hero-title">Learn Without <span>Limits</span></h1>
+            <p class="hero-subtitle">Transform your career with our comprehensive learning management system. Access courses, submit assignments, and track your progress.</p>
+            <button onclick="scrollToLogin()" class="hero-btn">Get Started →</button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="section-header">
+            <span class="section-tag">Why Choose Us</span>
+            <h2 class="section-title">Everything You Need</h2>
+            <p class="section-desc">Powerful features to accelerate your learning journey.</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Interactive Courses</h3>
+                <p>Access comprehensive course materials designed by expert instructors with hands-on projects.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Assignments & Quizzes</h3>
+                <p>Test your knowledge with assignments and get instant feedback on your progress.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Track Progress</h3>
+                <p>Monitor your learning journey with detailed analytics and progress tracking.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🏫</div>
+                <h3>Expert Instructors</h3>
+                <p>Learn from industry experts and professionals with years of real-world experience.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Learn Anywhere</h3>
+                <p>Access your courses from any device - desktop, tablet, or mobile.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure & Private</h3>
+                <p>Your data is protected with industry-standard security and encryption.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Section -->
+    <section class="login-section" id="login">
+        <div class="section-header">
+            <span class="section-tag">Join Now</span>
+            <h2 class="section-title">Start Learning Today</h2>
+            <p class="section-desc">Login or create an account to begin your journey.</p>
+        </div>
+        
+        <div class="login-container">
+            <div class="tab-switcher">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('register')">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="login-form active" id="login-form">
+                <div class="login-header">
+                    <h2>Welcome Back!</h2>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="#" onclick="switchTab('register')">Create Account</a></p>
+                </div>
+                <div id="message"></div>
+            </div>
+            
+            <!-- Register Form -->
+            <div class="register-form" id="register-form">
+                <div class="login-header">
+                    <h2>Create Account</h2>
+                </div>
+                
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="reg-username" placeholder="Choose a username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="reg-password" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>I am a</label>
+                        <select id="role">
+                            <option value="student">Student</option>
+                            <option value="instructor">Instructor</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Already have an account? <a href="#" onclick="switchTab('login')">Login here</a></p>
+                </div>
+                <div id="register-message"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">Mini LMS</div>
+            <p>Empowering learners worldwide with cutting-edge education technology.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Support</a>
+            </div>
+            <div class="copyright">
+                © 2026 Mini LMS. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor Animation
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+        
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            cursor.style.left = mouseX - 10 + 'px';
+            cursor.style.top = mouseY - 10 + 'px';
+        });
+
+        // Smooth follower animation
+        function animateFollower() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            
+            follower.style.left = followerX - 20 + 'px';
+            follower.style.top = followerY - 20 + 'px';
+            
+            requestAnimationFrame(animateFollower);
+        }
+        animateFollower();
+
+        // Particle Animation
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 80;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 1;
+                this.speedY = (Math.random() - 0.5) * 1;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            // Draw connections
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 150) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Tab Switcher
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.login-form, .register-form').forEach(form => form.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelector('.tab-btn:first-child').classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:last-child').classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+            }
+        }
+
+        function scrollToLogin() {
+            document.getElementById('login').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Form handling
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/accounts/login/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('access_token', data.access);
+                    localStorage.setItem('refresh_token', data.refresh);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/courses/';
+                } else {
+                    document.getElementById('message').innerHTML = '<p class="error">' + (data.error || 'Login failed') + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('message').innerHTML = '<p class="error">An error occurred</p>';
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                username: document.getElementById('reg-username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('reg-password').value,
+                role: document.getElementById('role').value,
+            };
+
+            try {
+                const response = await fetch('/api/accounts/register/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('register-message').innerHTML = '<p style="color: #27ae60;">Registration successful! Please login.</p>';
+                    setTimeout(() => switchTab('login'), 2000);
+                } else {
+                    document.getElementById('register-message').innerHTML = '<p class="error">Registration failed</p>';
+                }
+            } catch (error) {
+                document.getElementById('register-message').innerHTML = '<p class="error">An error occurred</p>';
+            }
+        });
+    </script>
+</body>
+</html>
